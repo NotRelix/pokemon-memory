@@ -1,8 +1,8 @@
 import "../styles/Card.css";
 
-const Card = ({ pokemon }) => {
+const Card = ({ pokemon, onClick }) => {
   return (
-    <li className='list__container' key={pokemon.name}>
+    <li id={pokemon.id} onClick={onClick} className='list__container'>
       <img className='list__image' src={pokemon.image} alt={pokemon.name}/>
       <p>{pokemon.name}</p>
     </li>

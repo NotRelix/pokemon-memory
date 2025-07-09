@@ -4,6 +4,8 @@ import Card from './components/Card';
 
 function App() {
   const [pokemonList, setPokemonList] = useState([]);
+  const [currentScore, setCurrentScore] = useState(0);
+  const [pickedPokemon, setPickedPokemon] = useState([]);
 
   useEffect(() => {
     async function fetchPokemons() {
@@ -13,7 +15,7 @@ function App() {
       const pokemonsWithImages = data.results.map((pokemon) => {
         const id = pokemon.url.split('/').filter(Boolean).pop();
         const image = `https://unpkg.com/pokeapi-sprites@2.0.2/sprites/pokemon/other/dream-world/${id}.svg`;
-        return { name: pokemon.name, image };
+        return { id, name: pokemon.name, image };
       });
 
       setPokemonList(pokemonsWithImages);
@@ -21,13 +23,29 @@ function App() {
 
     fetchPokemons();
   }, []);
+
+  function onCardClick(e) {
+    const container = e.target.closest(".list__container");
+    const id = container.getAttribute("id");
+    const alreadyPicked = pickedPokemon.find(element => element === id)
+    if (alreadyPicked) {
+      setCurrentScore(0);
+      setPickedPokemon([]);
+    } else {
+      setCurrentScore(currentScore + 1);
+      setPickedPokemon([...pickedPokemon, id])
+    }
+  }
   
   return (
     <div className='main-container'>
-      <h1 className='main-container__header'>Pokémon</h1>
+      <h1 className='main-container__header'>Pokémon Memory</h1>
+      <div className='main-container__score'>
+        <p>Score: {currentScore}</p>
+      </div>
       <ul className='main-container__list'>
         {pokemonList.map((pokemon) => (
-          <Card pokemon={pokemon} />
+          <Card key={pokemon.name} pokemon={pokemon} onClick={onCardClick} />
         ))}
       </ul>
     </div>
