@@ -4,6 +4,7 @@ import Card from './components/Card';
 
 function App() {
   const [pokemonList, setPokemonList] = useState([]);
+  const [shuffledList, setShuffledList] = useState([]);
   const [currentScore, setCurrentScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
   const [pickedPokemon, setPickedPokemon] = useState([]);
@@ -25,11 +26,27 @@ function App() {
     fetchPokemons();
   }, []);
 
+  useEffect(() => {
+    if (pokemonList.length > 0) {
+      shuffleList();
+    }
+  }, [pokemonList]);
+
+  function shuffleList() {
+    const shuffled = [...pokemonList];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    setShuffledList(shuffled);
+  }
+
   function onCardClick(e) {
     const container = e.target.closest(".list__container");
     if (!container) return;
     const id = container.getAttribute("id");
     const alreadyPicked = pickedPokemon.includes(id);
+    shuffleList();
     if (alreadyPicked) {
       setCurrentScore(0);
       setPickedPokemon([]);
@@ -50,7 +67,7 @@ function App() {
         <p>Best Score: {bestScore}</p>
       </div>
       <ul className='main-container__list'>
-        {pokemonList.map((pokemon) => (
+        {shuffledList.map((pokemon) => (
           <Card key={pokemon.name} pokemon={pokemon} onClick={onCardClick} />
         ))}
       </ul>
