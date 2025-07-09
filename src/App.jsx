@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import './App.css'
+import Card from './components/Card';
 
 function App() {
   const [pokemonList, setPokemonList] = useState([]);
@@ -22,14 +23,11 @@ function App() {
   }, []);
   
   return (
-    <div>
-      <h1>Pokémon</h1>
-      <ul>
+    <div className='main-container'>
+      <h1 className='main-container__header'>Pokémon</h1>
+      <ul className='main-container__list'>
         {pokemonList.map((pokemon) => (
-          <li key={pokemon.name}>
-            <img src={pokemon.image} alt={pokemon.name}/>
-            <p>{pokemon.name}</p>
-          </li>
+          <Card pokemon={pokemon} />
         ))}
       </ul>
     </div>
